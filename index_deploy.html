@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ДелоЗнаний — дистанционное обучение</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:          #16130F;
+  --ink-soft:     #1C1813;
+  --paper:        #242019;
+  --paper-raised: #2D2820;
+  --line:         #3A342A;
+  --kraft:        #D8B978;
+  --kraft-dim:    #9C8C63;
+  --stamp:        #C2463B;
+  --stamp-deep:   #9C372E;
+  --teal:         #6FAFA6;
+  --teal-deep:    #4F8780;
+  --text:         #EFE7D8;
+  --text-dim:     #ABA08C;
+  --text-faint:   #6F6657;
+  --f-display: 'Source Serif 4', Georgia, serif;
+  --f-body:    'IBM Plex Sans', system-ui, sans-serif;
+  --f-mono:    'IBM Plex Mono', 'Courier New', monospace;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 18px 40px -16px rgba(0,0,0,0.55);
+  --container: 1140px;
+}
+
+*{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; }
+
+body{
+  margin:0;
+  background: var(--ink);
+  color: var(--text);
+  font-family: var(--f-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img{ max-width:100%; display:block; }
+a{ color: inherit; text-decoration: none; }
+
+h1,h2,h3,h4{
+  font-family: var(--f-display);
+  font-weight: 600;
+  margin: 0 0 .5em;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+p{ margin: 0 0 1em; color: var(--text-dim); }
+
+.container{
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible{
+  outline: 2px solid var(--teal);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation: none !important; transition: none !important; }
+}
+
+/* EYEBROW */
+.eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:.5em;
+  font-family: var(--f-mono);
+  font-size: 12.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--kraft);
+}
+.eyebrow::before{
+  content:"";
+  width:7px; height:7px;
+  border-radius:50%;
+  background: var(--stamp);
+  flex-shrink:0;
+}
+
+/* STAMP BADGE */
+.stamp-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing:.12em;
+  text-transform: uppercase;
+  padding: 7px 14px;
+  border: 1.5px dashed currentColor;
+  border-radius: 999px;
+  transform: rotate(-4deg);
+  white-space: nowrap;
+}
+.stamp-badge.is-open{ color: var(--stamp); }
+.stamp-badge.is-done{ color: var(--teal); }
+.stamp-badge.is-new{ color: var(--kraft); }
+
+/* HEADER */
+.site-header{
+  position: sticky;
+  top:0;
+  z-index: 50;
+  background: rgba(22,19,15,.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.header-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  height: 72px;
+}
+.brand{
+  display:flex;
+  align-items:baseline;
+  gap:8px;
+  font-family: var(--f-display);
+  font-weight:700;
+  font-size: 20px;
+  color: var(--text);
+  cursor:pointer;
+}
+.brand .brand-dot{ color: var(--stamp); }
+
+.folder-nav{
+  display:flex;
+  gap:4px;
+  height: 100%;
+}
+.folder-nav a{
+  display:flex;
+  align-items:center;
+  padding: 0 18px;
+  font-family: var(--f-mono);
+  font-size: 13px;
+  letter-spacing: .04em;
+  color: var(--text-dim);
+  border-top: 1px solid transparent;
+  border-left: 1px solid transparent;
+  border-right: 1px solid transparent;
+  border-radius: 8px 8px 0 0;
+  transition: color .15s, background .15s, border-color .15s;
+  margin-top: 10px;
+  cursor:pointer;
+}
+.folder-nav a:hover{ color: var(--text); background: var(--paper); }
+.folder-nav a.active{
+  color: var(--text);
+  background: var(--paper);
+  border-color: var(--line);
+  border-bottom: 2px solid var(--stamp);
+}
+
+.header-actions{ display:flex; align-items:center; gap:12px; }
+.user-pill{
+  display:flex; align-items:center; gap:8px;
+  font-family: var(--f-mono); font-size: 12.5px;
+  color: var(--text-dim);
+}
+.user-pill strong{ color: var(--text); font-weight:500; }
+
+.nav-toggle{
+  display:none;
+  background:none; border:1px solid var(--line);
+  color: var(--text); border-radius: var(--radius-sm);
+  width:40px; height:40px;
+  font-size: 18px;
+  cursor:pointer;
+}
+
+@media (max-width: 860px){
+  .folder-nav{
+    position:absolute;
+    top: 72px; left:0; right:0;
+    flex-direction:column;
+    background: var(--ink-soft);
+    border-bottom: 1px solid var(--line);
+    display:none;
+    padding: 8px 28px 16px;
+  }
+  .folder-nav.is-open{ display:flex; }
+  .folder-nav a{ margin-top:0; border-radius: var(--radius-sm); padding: 12px 14px; }
+  .nav-toggle{ display:flex; align-items:center; justify-content:center; }
+}
+
+/* BUTTONS */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  font-family: var(--f-mono);
+  font-size: 13px;
+  letter-spacing:.06em;
+  text-transform: uppercase;
+  padding: 14px 22px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor:pointer;
+  transition: transform .12s, background .15s, border-color .15s, color .15s;
+}
+.btn:active{ transform: translateY(1px); }
+.btn-stamp{ background: var(--stamp); color: #1B0F0C; }
+.btn-stamp:hover{ background: #d2554a; }
+.btn-ghost{ background: transparent; border-color: var(--line); color: var(--text); }
+.btn-ghost:hover{ border-color: var(--kraft-dim); color: var(--kraft); }
+.btn-block{ width:100%; }
+.btn-sm{ padding: 9px 14px; font-size:11.5px; }
+
+/* SECTIONS */
+section{ padding: 84px 0; }
+.section-alt{ background: var(--ink-soft); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+.section-head{ max-width: 640px; margin-bottom: 48px; }
+.section-head h2{ font-size: clamp(26px, 3vw, 36px); }
+
+/* HERO */
+.hero{
+  padding: 88px 0 96px;
+  position: relative;
+  overflow:hidden;
+}
+.hero-grid{
+  display:grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: 56px;
+  align-items:center;
+}
+.hero h1{
+  font-size: clamp(34px, 4.4vw, 54px);
+  margin-top: 14px;
+  max-width: 14ch;
+}
+.hero .lede{
+  font-size: 17.5px;
+  max-width: 46ch;
+  margin-bottom: 28px;
+}
+.hero-actions{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom: 36px;}
+.hero-meta{
+  display:flex; gap: 28px;
+  font-family: var(--f-mono);
+  font-size: 12.5px;
+  color: var(--text-faint);
+}
+.hero-meta b{ color: var(--kraft); font-weight: 500; }
+
+.case-stack{
+  position:relative;
+  height: 340px;
+}
+.case-card{
+  position:absolute;
+  width: 78%;
+  padding: 22px 22px 20px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: transform .25s ease;
+}
+.case-card .tag{
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing:.1em;
+  color: var(--text-faint);
+  margin-bottom: 10px;
+  display:block;
+}
+.case-card h4{ font-size: 18px; margin-bottom: 6px; }
+.case-card p{ font-size: 13.5px; margin:0; }
+.case-card:nth-child(1){ top: 0; left: 0; transform: rotate(-3deg); z-index:3; }
+.case-card:nth-child(2){ top: 56px; left: 14%; transform: rotate(2deg); z-index:2; }
+.case-card:nth-child(3){ top: 118px; left: 24%; transform: rotate(-1.5deg); z-index:1; opacity:.85;}
+.case-stack:hover .case-card{ transform: rotate(0deg) translateY(-4px); }
+
+@media (max-width: 900px){
+  .hero-grid{ grid-template-columns:1fr; }
+  .case-stack{ height: 260px; margin-top: 12px; }
+}
+
+/* MODULE LIST */
+.module-list{ border-top: 1px solid var(--line); }
+.module-row{
+  display:grid;
+  grid-template-columns: 90px 1.3fr 1.7fr;
+  gap: 24px;
+  padding: 26px 0;
+  border-bottom: 1px solid var(--line);
+  align-items:start;
+}
+.module-row .num{
+  font-family: var(--f-mono);
+  font-size: 13px;
+  color: var(--stamp);
+  letter-spacing:.06em;
+}
+.module-row h3{ font-size: 19px; margin-bottom: 6px; }
+.module-row p{ margin:0; font-size: 14.5px; }
+@media (max-width: 760px){
+  .module-row{ grid-template-columns: 1fr; gap: 8px; }
+}
+
+/* COURSE GRID */
+.course-grid{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+@media (max-width: 980px){ .course-grid{ grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 640px){ .course-grid{ grid-template-columns: 1fr; } }
+
+.course-card{
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  transition: transform .18s, border-color .18s, background .18s;
+}
+.course-card:hover{ transform: translateY(-4px); border-color: var(--kraft-dim); background: var(--paper-raised); }
+.course-tab{ height: 8px; }
+.course-body{ padding: 22px; display:flex; flex-direction:column; flex:1; }
+.course-top{ display:flex; justify-content:space-between; align-items:flex-start; gap: 10px; margin-bottom: 14px;}
+.course-cat{
+  font-family: var(--f-mono); font-size: 11px; letter-spacing:.1em; text-transform:uppercase;
+  color: var(--text-faint);
+}
+.course-body h3{ font-size: 19px; margin-bottom: 8px; }
+.course-body p{ font-size: 14px; flex:1; }
+.course-meta{
+  display:flex; gap: 16px; flex-wrap:wrap;
+  font-family: var(--f-mono); font-size: 11.5px; color: var(--text-faint);
+  padding-top: 14px; margin-top: 14px;
+  border-top: 1px dashed var(--line);
+}
+.course-foot{ margin-top: 18px; display:flex; justify-content:space-between; align-items:center; }
+
+/* FILTER */
+.filter-bar{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom: 32px; }
+.filter-pill{
+  font-family: var(--f-mono); font-size: 12px; letter-spacing:.04em; text-transform:uppercase;
+  padding: 9px 16px; border-radius: 999px; border:1px solid var(--line);
+  background: transparent; color: var(--text-dim); cursor:pointer;
+  transition: all .15s;
+}
+.filter-pill:hover{ border-color: var(--kraft-dim); color: var(--text); }
+.filter-pill.active{ background: var(--kraft); border-color: var(--kraft); color: #211B0E; }
+
+/* AUTH */
+.auth-wrap{
+  min-height: calc(100vh - 72px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 60px 20px;
+}
+.auth-card{
+  width: 100%;
+  max-width: 420px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 36px 32px;
+  position: relative;
+}
+.auth-card::before{
+  content:"";
+  position:absolute; top:-1px; right: 28px;
+  width: 56px; height: 18px;
+  background: var(--kraft);
+  border-radius: 0 0 6px 6px;
+  opacity:.9;
+}
+.auth-tabs{ display:flex; gap: 4px; margin-bottom: 26px; border-bottom: 1px solid var(--line); }
+.auth-tab{
+  flex:1; text-align:center; padding: 12px 0;
+  font-family: var(--f-mono); font-size: 12.5px; letter-spacing:.06em; text-transform:uppercase;
+  color: var(--text-faint); background:none; border:none; cursor:pointer;
+  border-bottom: 2px solid transparent;
+}
+.auth-tab.active{ color: var(--text); border-bottom-color: var(--stamp); }
+
+/* FORMS */
+.field{ margin-bottom: 18px; }
+.field label{
+  display:block; font-family: var(--f-mono); font-size: 11.5px; letter-spacing:.08em; text-transform:uppercase;
+  color: var(--text-faint); margin-bottom: 8px;
+}
+.field input, .field select, .field textarea{
+  width:100%;
+  background: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  color: var(--text);
+  font-family: var(--f-body);
+  font-size: 14.5px;
+}
+.field input:focus, .field select:focus, .field textarea:focus{ border-color: var(--kraft-dim); outline:none; }
+.field-hint{ font-size:12px; color: var(--text-faint); margin-top:6px; }
+.form-msg{
+  font-family: var(--f-mono); font-size: 12.5px; padding: 10px 12px;
+  border-radius: var(--radius-sm); margin-bottom: 16px; display:none;
+}
+.form-msg.show{ display:block; }
+.form-msg.error{ background: rgba(194,70,59,.15); color:#E8897F; border:1px solid rgba(194,70,59,.4); }
+.form-msg.ok{ background: rgba(111,175,166,.15); color: var(--teal); border:1px solid rgba(111,175,166,.4); }
+.auth-foot{ margin-top:22px; text-align:center; font-size:13px; color: var(--text-faint); }
+
+/* DASHBOARD */
+.dash-head{ display:flex; justify-content:space-between; align-items:flex-end; gap: 20px; flex-wrap:wrap; margin-bottom: 40px;}
+.dash-head h1{ font-size: 30px; margin:0; }
+.progress-bar{ height:6px; background: var(--line); border-radius:99px; overflow:hidden; margin-top:12px; }
+.progress-bar span{ display:block; height:100%; background: var(--teal); }
+.empty-state{
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  padding: 48px 28px;
+  text-align:center;
+  color: var(--text-faint);
+}
+.empty-state h3{ color: var(--text); font-size:20px; }
+
+/* LESSON */
+.lesson-layout{
+  display:grid;
+  grid-template-columns: 1fr 280px;
+  gap: 32px;
+  align-items:start;
+}
+@media (max-width: 920px){ .lesson-layout{ grid-template-columns: 1fr; } }
+
+.video-frame{
+  position:relative;
+  background: #000;
+  border-radius: var(--radius);
+  overflow:hidden;
+  border: 1px solid var(--line);
+  aspect-ratio: 16/9;
+}
+.video-frame video{ width:100%; height:100%; object-fit:cover; }
+
+.case-tabs{ display:flex; gap:4px; margin-top: 26px; border-bottom: 1px solid var(--line); flex-wrap:wrap; }
+.case-tab{
+  font-family: var(--f-mono); font-size: 12.5px; letter-spacing:.05em; text-transform:uppercase;
+  padding: 12px 16px; color: var(--text-faint); background:none; border:none; cursor:pointer;
+  border-bottom: 2px solid transparent;
+}
+.case-tab.active{ color: var(--text); border-bottom-color: var(--stamp); }
+.case-panel{ display:none; padding-top: 24px; }
+.case-panel.active{ display:block; }
+.case-panel h3{ font-size: 20px; }
+.material-doc{
+  background: var(--paper);
+  border:1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px;
+}
+
+.sidebar-card{
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+.sidebar-card h4{
+  font-family: var(--f-mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase;
+  color: var(--text-faint); margin-bottom: 16px;
+}
+.module-mini{
+  display:flex; align-items:flex-start; gap:10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 13.5px;
+  cursor:default;
+}
+.module-mini:last-child{ border-bottom:none; }
+.module-mini .dot{
+  width:16px; height:16px; border-radius:50%; flex-shrink:0; margin-top:2px;
+  border: 1.5px solid var(--line);
+  display:flex; align-items:center; justify-content:center;
+  font-size:10px; color: transparent;
+}
+.module-mini.done .dot{ background: var(--teal); border-color:var(--teal); color:#10241F; }
+.module-mini.current .dot{ border-color: var(--stamp); }
+.module-mini.current span.label{ color: var(--text); }
+.module-mini span.label{ color: var(--text-dim); }
+
+/* QUIZ */
+.quiz-q{ margin-bottom: 20px; }
+.quiz-q p.qtext{ color: var(--text); font-weight:500; margin-bottom: 10px; }
+.quiz-opt{
+  display:flex; align-items:center; gap:10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  cursor:pointer;
+  font-size: 14px;
+}
+.quiz-opt:hover{ border-color: var(--kraft-dim); }
+.quiz-opt input{ accent-color: var(--stamp); }
+.quiz-result{ font-family: var(--f-mono); font-size:14px; margin-top:14px; display:none; }
+.quiz-result.show{ display:block; }
+
+/* FOOTER */
+.site-footer{
+  border-top: 1px solid var(--line);
+  padding: 40px 0;
+  font-family: var(--f-mono);
+  font-size: 12.5px;
+  color: var(--text-faint);
+}
+
+.mt-0{ margin-top:0; }
+.text-center{ text-align:center; }
+
+/* PAGE VISIBILITY */
+.page{ display:none; }
+.page.active{ display:block; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-row">
+    <a class="brand" onclick="navigate('home')">Дело<span class="brand-dot">Знаний</span></a>
+    <nav class="folder-nav" id="mainNav">
+      <a data-page="home" onclick="navigate('home')">Главная</a>
+      <a data-page="courses" onclick="navigate('courses')">Курсы</a>
+      <a onclick="navigate('home'); setTimeout(()=>document.getElementById('method').scrollIntoView({behavior:'smooth'}),100)">О методе</a>
+      <a data-page="dashboard" onclick="navigate('dashboard')">Личный кабинет</a>
+    </nav>
+    <div class="header-actions" id="headerAuth"></div>
+    <button class="nav-toggle" id="navToggle" aria-label="Открыть меню" aria-expanded="false">☰</button>
+  </div>
+</header>
+
+<!-- ==================== ГЛАВНАЯ ==================== -->
+<div class="page active" id="page-home">
+<main>
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="eyebrow">Дистанционное обучение — кейс-технология</span>
+        <h1>Каждый курс — это бурмалда</h1>
+        <p class="lede">Видеолекции, материалы для чтения, практические задания и тесты собраны — изучайте по порядку или возвращайтесь к нужному модулю в любой момент.</p>
+        <div class="hero-actions">
+          <button onclick="navigate('courses')" class="btn btn-stamp">Открыть каталог курсов</button>
+          <a href="#method" class="btn btn-ghost">Как устроен кейс</a>
+        </div>
+        <div class="hero-meta">
+          <span><b>36</b> кейсов</span>
+          <span><b>228</b> студентов</span>
+          <span><b>67%</b> доходят до финального теста(нет)</span>
+        </div>
+      </div>
+      <div class="case-stack" aria-hidden="true">
+        <div class="case-card">
+          <span class="tag">ДЕЛО № 14</span>
+          <h4>Основы веб-разработки</h4>
+          <p>5 модулей — видео и практика</p>
+        </div>
+        <div class="case-card">
+          <span class="tag">ДЕЛО № 27</span>
+          <h4>Бизнес-аналитика</h4>
+          <p>6 модулей — разбор кейса</p>
+        </div>
+        <div class="case-card">
+          <span class="tag">ДЕЛО № 31</span>
+          <h4>Английский язык B1</h4>
+          <p>6 модулей — аудирование</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt" id="method">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Метод</span>
+        <h2>Что такое кейс-технология</h2>
+        <p>Вместо разрозненных ссылок и файлов вы получаете один собранный «кейс»: последовательный набор материалов для самостоятельного изучения и периодических консультаций с куратором.</p>
+      </div>
+      <div class="module-list">
+        <div class="module-row">
+          <span class="num">1</span>
+          <h3>Видеолекция</h3>
+          <p>Короткая запись с объяснением темы — можно смотреть в своём темпе и возвращаться к сложным местам.</p>
+        </div>
+        <div class="module-row">
+          <span class="num">2</span>
+          <h3>Текстовые материалы</h3>
+          <p>Конспект, статья или методическое пособие — то, что удобно перечитать перед практикой.</p>
+        </div>
+        <div class="module-row">
+          <span class="num">3</span>
+          <h3>Практическое задание</h3>
+          <p>Применение темы на реальном или близком к реальному примере — то, что закрепляет навык.</p>
+        </div>
+        <div class="module-row">
+          <span class="num">4</span>
+          <h3>Контрольный тест</h3>
+          <p>Короткая проверка усвоения материала перед переходом к следующему модулю кейса.</p>
+        </div>
+        <div class="module-row">
+          <span class="num">5</span>
+          <h3>Консультация куратора</h3>
+          <p>Обратная связь по заданиям и ответы на вопросы — по расписанию или в чате курса.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Каталог</span>
+        <h2>Открытые дела</h2>
+        <p>Несколько кейсов, которые сейчас доступны для изучения. Полный каталог — на отдельной странице.</p>
+      </div>
+      <div class="course-grid" id="featuredCourses"></div>
+      <div class="text-center" style="margin-top:40px;">
+        <button onclick="navigate('courses')" class="btn btn-ghost">Смотреть все курсы</button>
+      </div>
+    </div>
+  </section>
+</main>
+</div>
+
+<!-- ==================== КУРСЫ ==================== -->
+<div class="page" id="page-courses">
+<main>
+  <section style="padding-bottom:0;">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Каталог</span>
+        <h1 style="font-size:clamp(28px,3.4vw,40px);">Все открытые курсы</h1>
+        <p>Выберите направление — внутри каждого кейса вас ждут видеолекции, материалы для чтения, практические задания и тест.</p>
+      </div>
+      <div class="filter-bar">
+        <button class="filter-pill active" data-filter="all" type="button">Все (4)</button>
+        <button class="filter-pill" data-filter="it" type="button">IT</button>
+        <button class="filter-pill" data-filter="business" type="button">Бизнес</button>
+        <button class="filter-pill" data-filter="languages" type="button">Языки</button>
+        <button class="filter-pill" data-filter="design" type="button">Дизайн</button>
+      </div>
+      <div class="course-grid" id="courseGrid"></div>
+    </div>
+  </section>
+</main>
+</div>
+
+<!-- ==================== ВХОД / РЕГИСТРАЦИЯ ==================== -->
+<div class="page" id="page-login">
+<main class="auth-wrap">
+  <div class="auth-card">
+    <span class="eyebrow" style="margin-bottom:18px;">Личное дело студента</span>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" type="button">Вход</button>
+      <button class="auth-tab" id="tabRegister" type="button">Регистрация</button>
+    </div>
+
+    <form id="formLogin" novalidate>
+      <div class="form-msg"></div>
+      <div class="field">
+        <label for="loginEmail">E-mail</label>
+        <input type="email" id="loginEmail" name="loginEmail" required autocomplete="email">
+      </div>
+      <div class="field">
+        <label for="loginPassword">Пароль</label>
+        <input type="password" id="loginPassword" name="loginPassword" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn-stamp btn-block">Войти в кабинет</button>
+      <p class="auth-foot">Демо-доступ: зарегистрируйтесь — это займёт 20 секунд.</p>
+    </form>
+
+    <form id="formRegister" novalidate style="display:none;">
+      <div class="form-msg"></div>
+      <div class="field">
+        <label for="regName">Имя</label>
+        <input type="text" id="regName" name="regName" required autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="regEmail">E-mail</label>
+        <input type="email" id="regEmail" name="regEmail" required autocomplete="email">
+      </div>
+      <div class="field">
+        <label for="regPassword">Пароль</label>
+        <input type="password" id="regPassword" name="regPassword" required autocomplete="new-password">
+        <p class="field-hint">Минимум 4 символа.</p>
+      </div>
+      <button type="submit" class="btn btn-stamp btn-block">Открыть личное дело</button>
+      <p class="auth-foot">Данные сохраняются локально в вашем браузере — это учебный демо-проект.</p>
+    </form>
+  </div>
+</main>
+</div>
+
+<!-- ==================== ЛИЧНЫЙ КАБИНЕТ ==================== -->
+<div class="page" id="page-dashboard">
+<main>
+  <section>
+    <div class="container">
+      <div class="dash-head">
+        <div>
+          <span class="eyebrow">Личный кабинет</span>
+          <h1 style="margin-top:8px;">Дело студента: <span id="dashName"></span></h1>
+        </div>
+        <button onclick="logout()" class="btn btn-ghost btn-sm">Выйти</button>
+      </div>
+      <div class="course-grid" id="dashGrid"></div>
+    </div>
+  </section>
+</main>
+</div>
+
+<!-- ==================== УРОК ==================== -->
+<div class="page" id="page-lesson">
+<main>
+  <section style="padding-bottom:90px;">
+    <div class="container">
+      <span class="eyebrow"><span id="crumbCategory">Категория</span> — кейс</span>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-top:10px;margin-bottom:8px;">
+        <h1 id="lessonTitle" style="margin-bottom:0;">Название курса</h1>
+        <span class="stamp-badge is-open" id="moduleBadge">Модуль 1 из 5</span>
+      </div>
+      <p id="lessonSummary" style="max-width:64ch;">Описание курса.</p>
+
+      <div class="lesson-layout" style="margin-top:36px;">
+        <div>
+          <div class="video-frame">
+            <video controls preload="metadata" id="lessonVideo">
+              <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
+              Ваш браузер не поддерживает воспроизведение видео.
+            </video>
+          </div>
+          <p class="field-hint" style="margin-top:10px;">Пример лудомании, пример: Максик Додепов.</p>
+
+          <div class="case-tabs">
+            <button class="case-tab active" data-panel="panelVideo" type="button">Видеолекция</button>
+            <button class="case-tab" data-panel="panelText" type="button">Текстовый материал</button>
+            <button class="case-tab" data-panel="panelTask" type="button">Задание</button>
+            <button class="case-tab" data-panel="panelQuiz" type="button">Тест</button>
+          </div>
+
+          <div class="case-panel active" id="panelVideo">
+            <div class="material-doc">
+              <h3>О видеолекции.</h3>
+              <p>Видео с хохмой.</p>
+              <p>Если что — это хохма.</p>
+            </div>
+          </div>
+
+          <div class="case-panel" id="panelText">
+            <div class="material-doc">
+              <h3>Конспект модуля</h3>
+              <p>Кейс-технология предполагает, что у каждой темы есть письменный конспект — он короче видео и подходит для повторения перед практикой или тестом.</p>
+              <p>Конспект включает ключевые определения, формулы или приёмы, разобранные в видео, а также короткий список того, что нужно уметь делать самостоятельно к концу модуля.</p>
+              <p>В реальном курсе здесь будет полный текст методического материала.</p>
+            </div>
+          </div>
+
+          <div class="case-panel" id="panelTask">
+            <div class="material-doc">
+              <h3>Практическое задание</h3>
+              <p>Выполните небольшое упражнение по теме модуля и сохраните черновик ответа — куратор проверит его на следующей консультации.</p>
+              <div class="field" style="margin-top:18px;">
+                <label for="taskDraft">Ваш ответ</label>
+                <textarea id="taskDraft" rows="6" placeholder="Опишите ход решения или вставьте ссылку на выполненную работу…"></textarea>
+              </div>
+              <button class="btn btn-ghost btn-sm" id="saveDraftBtn" type="button">Сохранить черновик</button>
+              <span class="field-hint" id="draftStatus" style="margin-left:10px;"></span>
+            </div>
+          </div>
+
+          <div class="case-panel" id="panelQuiz">
+            <div class="material-doc">
+              <h3>Контрольный тест</h3>
+              <p>Три коротких вопроса о принципах кейс-технологии — пройдите их, чтобы закрыть модуль.</p>
+              <form id="quizForm">
+                <div class="quiz-q">
+                  <p class="qtext">1. Какой материал в кейсе обычно изучают первым?</p>
+                  <label class="quiz-opt"><input type="radio" name="q1" value="video" required> Видеолекция</label>
+                  <label class="quiz-opt"><input type="radio" name="q1" value="quiz"> Контрольный тест</label>
+                  <label class="quiz-opt"><input type="radio" name="q1" value="cert"> Итоговый сертификат</label>
+                </div>
+                <div class="quiz-q">
+                  <p class="qtext">2. Когда лучше проходить контрольный тест модуля?</p>
+                  <label class="quiz-opt"><input type="radio" name="q2" value="before" required> До просмотра видеолекции</label>
+                  <label class="quiz-opt"><input type="radio" name="q2" value="after"> После изучения всех материалов модуля</label>
+                  <label class="quiz-opt"><input type="radio" name="q2" value="never"> Тест проходить не обязательно</label>
+                </div>
+                <div class="quiz-q">
+                  <p class="qtext">3. Что делает кейс-технологию удобной для дистанционного формата?</p>
+                  <label class="quiz-opt"><input type="radio" name="q3" value="strict" required> Жёсткое расписание онлайн-встреч</label>
+                  <label class="quiz-opt"><input type="radio" name="q3" value="pace"> Материалы можно изучать в своём темпе</label>
+                  <label class="quiz-opt"><input type="radio" name="q3" value="notasks"> Отсутствие практических заданий</label>
+                </div>
+                <button type="submit" class="btn btn-stamp">Проверить ответы</button>
+                <p class="quiz-result" id="quizResult"></p>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <aside class="sidebar-card">
+          <h4>Состав кейса</h4>
+          <ul id="moduleList" style="list-style:none; margin:0; padding:0;"></ul>
+        </aside>
+      </div>
+    </div>
+  </section>
+</main>
+</div>
+
+<footer class="site-footer">
+  <div class="container" style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+    <span>© <span id="footerYear"></span> ДелоЗнаний — учебный демо-проект</span>
+    <span>Платформа дистанционного обучения — кейс-технология</span>
+  </div>
+</footer>
+
+<script>
+/* ===== DATA ===== */
+const COURSES = [
+  {
+    id: 'frontend-basics',
+    category: 'it', categoryLabel: 'IT', color: '#C2463B',
+    title: 'Основы веб-разработки',
+    summary: 'HTML, CSS и JavaScript с нуля — кейс собран как практический тренажёр с проверочными заданиями после каждого модуля.',
+    level: 'Начальный', duration: '6 недель', modulesCount: 5, badge: 'Популярный',
+    modules: [
+      { title: 'Структура HTML-документа', type: 'video' },
+      { title: 'Каскадные стили и блочная модель', type: 'video' },
+      { title: 'Основы JavaScript', type: 'video' },
+      { title: 'Практическое задание: вёрстка страницы', type: 'task' },
+      { title: 'Итоговое тестирование', type: 'quiz' }
+    ]
+  },
+  {
+    id: 'business-analytics',
+    category: 'business', categoryLabel: 'Бизнес', color: '#D8B978',
+    title: 'Бизнес-аналитика для начинающих',
+    summary: 'Кейс построен на разборе реальных управленческих ситуаций — от постановки задачи до презентации решения руководству.',
+    level: 'Средний', duration: '8 недель', modulesCount: 6, badge: 'Новый кейс',
+    modules: [
+      { title: 'Постановка аналитической задачи', type: 'video' },
+      { title: 'Сбор и подготовка данных', type: 'video' },
+      { title: 'Методы анализа', type: 'text' },
+      { title: 'Кейс: анализ продаж', type: 'task' },
+      { title: 'Презентация результатов', type: 'video' },
+      { title: 'Контрольный тест', type: 'quiz' }
+    ]
+  },
+  {
+    id: 'english-b1',
+    category: 'languages', categoryLabel: 'Языки', color: '#6FAFA6',
+    title: 'Английский язык: уровень B1',
+    summary: 'Кейс-материалы объединяют видеолекции преподавателя, аудирование и письменные упражнения для самостоятельной работы.',
+    level: 'Средний', duration: '10 недель', modulesCount: 6, badge: null,
+    modules: [
+      { title: 'Грамматика: времена группы Present', type: 'video' },
+      { title: 'Аудирование: диалоги в офисе', type: 'video' },
+      { title: 'Чтение: деловая переписка', type: 'text' },
+      { title: 'Письменное упражнение', type: 'task' },
+      { title: 'Разговорная практика', type: 'video' },
+      { title: 'Промежуточный тест', type: 'quiz' }
+    ]
+  },
+  {
+    id: 'ui-design',
+    category: 'design', categoryLabel: 'Дизайн', color: '#9C8C63',
+    title: 'Интерфейсный дизайн: первый проект',
+    summary: 'От пользовательских сценариев до прототипа — кейс ведёт через все этапы создания интерфейса одного небольшого продукта.',
+    level: 'Начальный', duration: '5 недель', modulesCount: 5, badge: 'Новый кейс',
+    modules: [
+      { title: 'Пользовательские сценарии', type: 'text' },
+      { title: 'Сетки и типографика', type: 'video' },
+      { title: 'Прототипирование экранов', type: 'video' },
+      { title: 'Практика: экран авторизации', type: 'task' },
+      { title: 'Проверка усвоения', type: 'quiz' }
+    ]
+  },
+  {
+    id: 'project-management',
+    category: 'business', categoryLabel: 'Бизнес', color: '#D8B978',
+    title: 'Управление проектами',
+    summary: 'Классические и гибкие методологии разбираются на одном сквозном кейсе — запуске учебного стартап-проекта.',
+    level: 'Продвинутый', duration: '7 недель', modulesCount: 5, badge: null,
+    modules: [
+      { title: 'Жизненный цикл проекта', type: 'video' },
+      { title: 'Agile и Scrum на практике', type: 'video' },
+      { title: 'Управление рисками', type: 'text' },
+      { title: 'Кейс: план запуска продукта', type: 'task' },
+      { title: 'Финальный тест', type: 'quiz' }
+    ]
+  },
+  {
+    id: 'python-data',
+    category: 'it', categoryLabel: 'IT', color: '#C2463B',
+    title: 'Python для анализа данных',
+    summary: 'Кейс собран вокруг одного датасета: от очистки данных до построения графиков и первых выводов.',
+    level: 'Средний', duration: '9 недель', modulesCount: 6, badge: 'Популярный',
+    modules: [
+      { title: 'Синтаксис Python и структуры данных', type: 'video' },
+      { title: 'Библиотека pandas', type: 'video' },
+      { title: 'Визуализация данных', type: 'video' },
+      { title: 'Очистка и подготовка датасета', type: 'task' },
+      { title: 'Разбор кейса целиком', type: 'text' },
+      { title: 'Итоговый тест', type: 'quiz' }
+    ]
+  }
+];
+
+function getCourseById(id){ return COURSES.find(c => c.id === id); }
+
+/* ═══════════════════════════════════════════════════════
+   API — все запросы к бэкенду
+   ═══════════════════════════════════════════════════════ */
+// На Railway/Render сервер сам раздаёт HTML, поэтому API на том же домене
+const API = window.location.hostname === 'localhost' ? 'http://localhost:8000' : '';
+
+/* Получить токен из localStorage */
+function getToken(){ return localStorage.getItem('edu_token') || ''; }
+/* Сохранить токен */
+function saveToken(t){ localStorage.setItem('edu_token', t); }
+/* Удалить токен */
+function clearToken(){ localStorage.removeItem('edu_token'); }
+
+/* Базовый fetch с авторизацией */
+async function apiFetch(path, options = {}){
+  const token = getToken();
+  const res = await fetch(API + path, {
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { 'Authorization': 'Bearer ' + token } : {})
+    },
+    ...options
+  });
+  const data = await res.json();
+  return { ok: res.ok, status: res.status, data };
+}
+
+/* Удобные методы */
+const api = {
+  register: (name, email, password) =>
+    apiFetch('/api/register', { method: 'POST', body: JSON.stringify({ name, email, password }) }),
+  login: (email, password) =>
+    apiFetch('/api/login', { method: 'POST', body: JSON.stringify({ email, password }) }),
+  logout: () =>
+    apiFetch('/api/logout', { method: 'POST' }),
+  me: () =>
+    apiFetch('/api/me'),
+};
+
+/* Кэш текущего пользователя (чтобы не дёргать /api/me на каждый рендер) */
+let _currentUser = null;
+
+async function fetchCurrentUser(){
+  if(!getToken()){ _currentUser = null; return null; }
+  const { ok, data } = await api.me();
+  _currentUser = ok ? data : null;
+  return _currentUser;
+}
+
+function getCurrentUser(){ return _currentUser; }
+
+/* Прогресс остаётся в localStorage (курсы хранятся на фронте) */
+function getProgress(email){
+  try{ return JSON.parse(localStorage.getItem('edu_progress_' + email)) || {}; }catch(e){ return {}; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   НАВИГАЦИЯ
+   ═══════════════════════════════════════════════════════ */
+let currentPage = 'home';
+let currentCourseId = null;
+
+async function navigate(page, courseId){
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.folder-nav a[data-page]').forEach(a => {
+    a.classList.toggle('active', a.dataset.page === page);
+  });
+  currentPage = page;
+  window.scrollTo(0, 0);
+
+  if(page === 'home')    renderFeatured();
+  if(page === 'courses') renderCourses();
+  if(page === 'dashboard') await renderDashboard();
+  if(page === 'lesson' && courseId){ currentCourseId = courseId; renderLesson(courseId); }
+  if(page === 'login')   initAuth();
+
+  updateHeaderAuth();
+}
+
+/* ═══════════════════════════════════════════════════════
+   ШАПКА
+   ═══════════════════════════════════════════════════════ */
+function updateHeaderAuth(){
+  const user = getCurrentUser();
+  const el = document.getElementById('headerAuth');
+  if(user){
+    el.innerHTML = `<span class="user-pill">Привет, <strong>${user.name}</strong></span>`;
+  } else {
+    el.innerHTML = `<button onclick="navigate('login')" class="btn btn-stamp btn-sm">Войти</button>`;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   КАРТОЧКА КУРСА
+   ═══════════════════════════════════════════════════════ */
+function courseCardHTML(course, showProgress, email){
+  const progress = email ? getProgress(email) : {};
+  const pct = progress[course.id] ?? null;
+  const badgeHTML = course.badge ? `<span class="stamp-badge is-new">${course.badge}</span>` : '';
+  return `
+    <article class="course-card">
+      <div class="course-tab" style="background:${course.color}"></div>
+      <div class="course-body">
+        <div class="course-top">
+          <span class="course-cat">${course.categoryLabel}</span>
+          ${showProgress && pct !== null
+            ? `<span class="stamp-badge ${pct>=100?'is-done':'is-open'}">${pct>=100?'Завершено':'В работе'}</span>`
+            : badgeHTML}
+        </div>
+        <h3>${course.title}</h3>
+        <p>${course.summary}</p>
+        ${showProgress && pct !== null ? `
+          <div class="progress-bar"><span style="width:${pct}%"></span></div>
+          <p style="font-family:var(--f-mono);font-size:12px;color:var(--text-faint);margin-top:8px;">${pct}% пройдено · ${course.modulesCount} модулей</p>
+        ` : `
+          <div class="course-meta">
+            <span>${course.level}</span>
+            <span>${course.duration}</span>
+            <span>${course.modulesCount} модулей</span>
+          </div>
+        `}
+        <div class="course-foot">
+          <button onclick="navigate('lesson','${course.id}')" class="btn btn-ghost btn-sm">
+            ${showProgress && pct > 0 ? 'Продолжить кейс →' : 'Начать кейс →'}
+          </button>
+        </div>
+      </div>
+    </article>`;
+}
+
+/* ═══════════════════════════════════════════════════════
+   ГЛАВНАЯ
+   ═══════════════════════════════════════════════════════ */
+function renderFeatured(){
+  const grid = document.getElementById('featuredCourses');
+  grid.innerHTML = COURSES.slice(0,3).map(c => courseCardHTML(c, false, null)).join('');
+}
+
+/* ═══════════════════════════════════════════════════════
+   КАТАЛОГ КУРСОВ
+   ═══════════════════════════════════════════════════════ */
+function renderCourses(filter = 'all'){
+  const grid = document.getElementById('courseGrid');
+  const filtered = filter === 'all' ? COURSES : COURSES.filter(c => c.category === filter);
+  grid.innerHTML = filtered.map(c => courseCardHTML(c, false, null)).join('');
+  document.querySelectorAll('.filter-pill').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.filter === filter);
+    btn.onclick = () => renderCourses(btn.dataset.filter);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   ЛИЧНЫЙ КАБИНЕТ
+   ═══════════════════════════════════════════════════════ */
+async function renderDashboard(){
+  /* Проверяем авторизацию через API */
+  const user = await fetchCurrentUser();
+  if(!user){ navigate('login'); return; }
+
+  document.getElementById('dashName').textContent = user.name;
+  const progress = getProgress(user.email);
+  const enrolledIds = Object.keys(progress);
+  const grid = document.getElementById('dashGrid');
+
+  if(enrolledIds.length === 0){
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+      <h3>Дело пока пустое</h3>
+      <p>Вы ещё не открыли ни одного кейса. Перейдите в каталог и начните первый курс.</p>
+      <button onclick="navigate('courses')" class="btn btn-stamp" style="margin-top:18px;">Открыть каталог курсов</button>
+    </div>`;
+    return;
+  }
+  grid.innerHTML = enrolledIds.map(id => {
+    const course = getCourseById(id);
+    if(!course) return '';
+    return courseCardHTML(course, true, user.email);
+  }).join('');
+}
+
+/* ═══════════════════════════════════════════════════════
+   ВЫХОД
+   ═══════════════════════════════════════════════════════ */
+async function logout(){
+  await api.logout();          // удаляем сессию в БД
+  clearToken();                // удаляем токен из браузера
+  _currentUser = null;
+  navigate('home');
+}
+
+/* ═══════════════════════════════════════════════════════
+   АВТОРИЗАЦИЯ
+   ═══════════════════════════════════════════════════════ */
+function initAuth(){
+  const tabLogin    = document.getElementById('tabLogin');
+  const tabRegister = document.getElementById('tabRegister');
+  const formLogin   = document.getElementById('formLogin');
+  const formRegister= document.getElementById('formRegister');
+
+  tabLogin.onclick    = () => switchTab('login');
+  tabRegister.onclick = () => switchTab('register');
+
+  function switchTab(which){
+    const isLogin = which === 'login';
+    tabLogin.classList.toggle('active', isLogin);
+    tabRegister.classList.toggle('active', !isLogin);
+    formLogin.style.display    = isLogin ? 'block' : 'none';
+    formRegister.style.display = isLogin ? 'none'  : 'block';
+    hideMsg(formLogin); hideMsg(formRegister);
+  }
+
+  /* ── Регистрация ── */
+  formRegister.onsubmit = async (e) => {
+    e.preventDefault();
+    const name     = formRegister.regName.value.trim();
+    const email    = formRegister.regEmail.value.trim().toLowerCase();
+    const password = formRegister.regPassword.value;
+
+    // Клиентская валидация
+    if(name.length < 2)    return showMsg(formRegister, 'Укажите имя — минимум 2 символа.', 'error');
+    if(!email.includes('@'))return showMsg(formRegister, 'Проверьте формат e-mail.', 'error');
+    if(password.length < 4) return showMsg(formRegister, 'Пароль должен быть не короче 4 символов.', 'error');
+
+    showMsg(formRegister, 'Отправляем данные…', 'ok');
+
+    // Запрос к API
+    const { ok, data } = await api.register(name, email, password);
+    if(!ok){
+      return showMsg(formRegister, data.error || 'Ошибка регистрации.', 'error');
+    }
+
+    // Сохраняем токен, устанавливаем демо-прогресс
+    saveToken(data.token);
+    _currentUser = data.user;
+    const demoProgress = {};
+    demoProgress[COURSES[0].id] = 15;
+    demoProgress[COURSES[2].id] = 0;
+    localStorage.setItem('edu_progress_' + email, JSON.stringify(demoProgress));
+
+    showMsg(formRegister, 'Готово! Открываем личный кабинет…', 'ok');
+    setTimeout(() => navigate('dashboard'), 700);
+  };
+
+  /* ── Вход ── */
+  formLogin.onsubmit = async (e) => {
+    e.preventDefault();
+    const email    = formLogin.loginEmail.value.trim().toLowerCase();
+    const password = formLogin.loginPassword.value;
+
+    if(!email || !password) return showMsg(formLogin, 'Заполните все поля.', 'error');
+
+    showMsg(formLogin, 'Проверяем данные…', 'ok');
+
+    const { ok, data } = await api.login(email, password);
+    if(!ok){
+      return showMsg(formLogin, data.error || 'Неверный e-mail или пароль.', 'error');
+    }
+
+    saveToken(data.token);
+    _currentUser = data.user;
+
+    showMsg(formLogin, 'Вход выполнен. Открываем личный кабинет…', 'ok');
+    setTimeout(() => navigate('dashboard'), 600);
+  };
+
+  /* ── Утилиты формы ── */
+  function showMsg(form, text, type){
+    const el = form.querySelector('.form-msg');
+    el.textContent = text;
+    el.className = 'form-msg show ' + type;
+  }
+  function hideMsg(form){ form.querySelector('.form-msg').className = 'form-msg'; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   СТРАНИЦА УРОКА
+   ═══════════════════════════════════════════════════════ */
+function renderLesson(courseId){
+  const course = getCourseById(courseId) || COURSES[0];
+  const user   = getCurrentUser();
+  const progressMap = user ? getProgress(user.email) : {};
+  const pct = progressMap[course.id] ?? 0;
+  const currentIndex = Math.min(
+    course.modules.length - 1,
+    Math.round((pct / 100) * course.modules.length)
+  );
+
+  document.getElementById('crumbCategory').textContent = course.categoryLabel;
+  document.getElementById('lessonTitle').textContent   = course.title;
+  document.getElementById('lessonSummary').textContent = course.summary;
+  document.getElementById('moduleBadge').textContent   = `Модуль ${currentIndex + 1} из ${course.modules.length}`;
+  document.title = course.title + ' — ДелоЗнаний';
+
+  /* Боковая панель */
+  const list = document.getElementById('moduleList');
+  list.innerHTML = course.modules.map((m, i) => {
+    const state = i < currentIndex ? 'done' : (i === currentIndex ? 'current' : '');
+    const mark  = i < currentIndex ? '✓'    : (i === currentIndex ? '●'       : '');
+    return `<li class="module-mini ${state}"><span class="dot">${mark}</span><span class="label">${m.title}</span></li>`;
+  }).join('');
+
+  /* Вкладки */
+  const tabs   = document.querySelectorAll('.case-tab');
+  const panels = document.querySelectorAll('.case-panel');
+  tabs.forEach(tab => {
+    tab.onclick = () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.panel).classList.add('active');
+    };
+  });
+
+  /* Черновик задания — остаётся в localStorage */
+  const textarea = document.getElementById('taskDraft');
+  const saveBtn  = document.getElementById('saveDraftBtn');
+  const status   = document.getElementById('draftStatus');
+  const draftKey = 'edu_draft_' + courseId;
+  textarea.value = localStorage.getItem(draftKey) || '';
+  saveBtn.onclick = () => {
+    localStorage.setItem(draftKey, textarea.value);
+    status.textContent = 'Черновик сохранён.';
+    setTimeout(() => status.textContent = '', 2500);
+  };
+
+  /* Тест */
+  const quizForm   = document.getElementById('quizForm');
+  const quizResult = document.getElementById('quizResult');
+  quizForm.onsubmit = (e) => {
+    e.preventDefault();
+    const answers = { q1: 'video', q2: 'after', q3: 'pace' };
+    let score = 0;
+    Object.keys(answers).forEach(name => {
+      const picked = quizForm.elements[name] && quizForm.elements[name].value;
+      if(picked === answers[name]) score++;
+    });
+    quizResult.className = 'quiz-result show';
+    quizResult.textContent = `Результат: ${score} из 3.`;
+    if(user){
+      const progress  = getProgress(user.email);
+      const increment = Math.round((score / 3) * (100 / course.modules.length));
+      const updated   = Math.min(100, (progress[course.id] || 0) + increment);
+      progress[course.id] = updated;
+      localStorage.setItem('edu_progress_' + user.email, JSON.stringify(progress));
+      quizResult.textContent += ` Прогресс по кейсу обновлён: ${updated}%.`;
+    } else {
+      quizResult.textContent += ' Войдите в личный кабинет, чтобы прогресс сохранялся.';
+    }
+  };
+}
+
+/* ═══════════════════════════════════════════════════════
+   NAV TOGGLE (мобильное меню)
+   ═══════════════════════════════════════════════════════ */
+document.getElementById('navToggle').addEventListener('click', function(){
+  const nav  = document.getElementById('mainNav');
+  const open = nav.classList.toggle('is-open');
+  this.setAttribute('aria-expanded', open);
+});
+
+/* ═══════════════════════════════════════════════════════
+   ИНИЦИАЛИЗАЦИЯ
+   ═══════════════════════════════════════════════════════ */
+document.getElementById('footerYear').textContent = new Date().getFullYear();
+
+/* При загрузке проверяем, есть ли сохранённый токен — если да, восстанавливаем сессию */
+(async () => {
+  if(getToken()){
+    await fetchCurrentUser();   // проверяем токен через /api/me
+  }
+  renderFeatured();
+  updateHeaderAuth();
+})();
+</script>
+</body>
+</html>
